@@ -1,0 +1,15 @@
+[features]
+seeds =true 
+skip-lint = false
+[programs.localnet]
+purplepay = "JEBJJZHevjah4H2Xczry1Pztzgy2gvKG1BRchpg5Vds1"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "Localnet"
+wallet = "/home/anoushk/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
