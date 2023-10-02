@@ -12,13 +12,12 @@ import {
 } from "@solana/web3.js";
 import {ethers} from "ethers";
 
-import { airdropSol } from "./utils.ts";
+import { airdropSol } from "./utils";
 describe("purplepay", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
 
   const program = anchor.workspace.Purplepay as Program<Purplepay>;
-  const provider = anchor.AnchorProvider.env();
   it("Is initialized!", async () => {
     const user = Keypair.generate();
     await airdropSol(user.publicKey, 10);
@@ -26,7 +25,7 @@ describe("purplepay", () => {
     let parentChain = "solana";
     let data = JSON.stringify({ email: "email.test@gmail.com" });
 
-    let crosschain_account = anchor.web3.PublicKey.findProgramAddressSync(
+    let crosschainAccount = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("crosschain_id"), user.publicKey.toBuffer()],
       program.programId
     )[0];
@@ -34,7 +33,7 @@ describe("purplepay", () => {
     const tx = await program.methods
       .initialize(name, parentChain, data)
       .accounts({
-        crosschain_account,
+        crosschainAccount,
         signer: user.publicKey,
         systemProgram: SystemProgram.programId,
       })
@@ -43,7 +42,7 @@ describe("purplepay", () => {
         skipPreflight: true
       });
     console.log("Your transaction signature", tx);
-    const crosschain_account_data = await program.account.crosschainId.fetch(crosschain_account);
+    const crosschain_account_data = await program.account.crosschainId.fetch(crosschainAccount);
     console.log("crosschain_account: ",crosschain_account_data);
     let decoded = ethers.utils.defaultAbiCoder.decode(["string"],crosschain_account_data.nameHash);
     console.log("name_decoded: ",decoded);
