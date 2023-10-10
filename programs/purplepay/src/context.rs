@@ -187,6 +187,18 @@ pub struct SendMessage<'info> {
     /// account be mutable.
     pub wormhole_message: UncheckedAccount<'info>,
 
+    #[account(
+        init,
+        payer = signer,
+        seeds = [b"crosschain_id".as_ref(), signer.key().as_ref()],
+        bump,
+        space = 8 + CrosschainID::LEN
+    )]
+    pub crosschain_account: Account<'info, CrosschainID>,
+
+    #[account(mut)]
+    pub signer: Signer<'info>,
+
     /// System program.
     pub system_program: Program<'info, System>,
 
@@ -269,23 +281,23 @@ pub struct ReadReceivedMessage<'info> {
     pub rent: Sysvar<'info, Rent>,
 }
 
-//! Updated according to purple pay code
+// Updated according to purple pay code
 
-#[derive(Accounts)]
-pub struct StoreInformation<'info> {
-    #[account(
-        init,
-        payer = signer,
-        seeds = [b"crosschain_id".as_ref(), signer.key().as_ref()],
-        bump,
-        space = 8 + CrosschainID::LEN
-    )]
-    pub crosschain_account: Account<'info, CrosschainID>,
-    pub system_program: Program<'info, System>,
+// #[derive(Accounts)]
+// pub struct StoreInformation<'info> {
+//     #[account(
+//         init,
+//         payer = signer,
+//         seeds = [b"crosschain_id".as_ref(), signer.key().as_ref()],
+//         bump,
+//         space = 8 + CrosschainID::LEN
+//     )]
+//     pub crosschain_account: Account<'info, CrosschainID>,
+//     pub system_program: Program<'info, System>,
 
-    #[account(mut)]
-    pub signer: Signer<'info>,
-}
+//     #[account(mut)]
+//     pub signer: Signer<'info>,
+// }
 
 #[account]
 pub struct CrosschainID {
